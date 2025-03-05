@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Header-->
+        <header class="bg-warning py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div style="color: #0d6efd;" class="text-center">
+                    <h1 class="display-4 fw-bolder">Update Info</h1>
+                    <p class="lead fw-normal mb-0">Update User Info...</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+        	<div class="row">
+        		
+        			<div class="col-md-6 offset-md-3">
+
+        				<br/><br/>
+                    <strong>Billing Information</strong>
+                    <br/><br/>
+<form method="POST" action="{% url 'update_info' %}">
+    {% csrf_token %}
+    
+    {{ form.as_p }}
+    <br/><br/>
+    <strong>Shipping Information</strong>
+    <br/><br/>
+    
+    {{ shipping_form.as_p }}
+
+
+    <br/><br/>
+    <div align="right">
+        <button style="background-color: #ffc107;"  type="submit" class="btn btn-outline-dark">
+        Update Profile
+        </button>
+    </div>
+</form>
+
+<br/><br/>
+
+
+<br/><br/>
+<br/><br/>
+<br/><br/>
+
+        			</div>
+        		
+        	</div>
+        </div>
+
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<header class="py-4">
+  <div class="container px-4 px-lg-5 my-4">
+      <div class="card bg-light">
+          <div class="card-body">
+            <form method="POST" action="{% url 'search' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+          
+                  <input type="text" class="form-control" placeholder="Search For Products" name="searched">
+                </div>
+            <button style="background-color: #ffc107;" ""type="submit" class="btn btn-outline-dark">
+                Search 
+            </button>
+            </form>
+          </div>
+        </div>
+        
+  </div>
+</header>
+<br/><br/><br/>
+
+
+<div style="width: 1200px;" class="container ">
+<br/>
+
+
+<div class="card mb-3"> 
+  <div class="row g-0">
+      {% comment %} style="width: 1200px;" {% endcomment %}
+    <div class="col-md-4">
+      {% comment %} style="height: 400px; width: 400px;" {% endcomment %}
+      <img style="width: 350px;" src="{{ product.image }}" class="img-fluid rounded-start" alt="...">
+      {% comment %} style="height: 400px; width: 380px;"  {% endcomment %}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body ">
+        <h5 style="font-size: 23px"class="card-title">{{ product.name }}</h5>
+        <br/>
+        <p style="font-size: 19px" class="card-text ">{{ product.description }}</p>
+        {% comment %} style="width: 700px;" {% endcomment %}
+        <br/>
+        <div style=" height: 50px; width: 500px; font-size: 20px;" class="text-left bg-light">
+          <!-- Product price-->
+          Price:  <span style="color: #dc3545;"> ₫{{ product.price }}</span>
+        </div>
+         
+        
+            <br/><br/>
+        <div class="row justify-content">
+            <div class="col-md-2">Quantity:</div>
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="qty-cart">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              </div>            
+        </div>
+        <br/><br/>
+        
+        <a style="background-color: #ffc107;" href="{% url 'home'%}" class="btn btn-outline-dark">Home</a>
+        <button style="background-color: #ffc107;" type="button" value="{{ product.id }}" class="btn btn-outline-dark" id="add-cart">Add To Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<section class="py-5">
+  <div><p style="font-size: 20px">Có thể bạn sẽ thích...</p></div>
+  <div class="container px-4 px-lg-5 mt-5">
+  
+      <div class="row  gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+              
+      {% for recommend_product in recommend_products %}
+          
+      <div class="col mb-5">
+          <div class="card h-100 bg-light" >
+                  <!-- Product image-->
+                  <img class="card-img-top" src="{{ recommend_product.image }}" alt="..." />
+                  <!-- recommend_Product details-->
+                  <div style="height: 180px;" class=" card-body">
+                      <div class="wrapper bg-light">
+                          <div class="demo-1 text-center">{{ recommend_product.name }}</div>
+                          
+                      </div>
+                  </div>
+
+                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                      <div style="color: #dc3545;" class="text-center">
+                          <!-- recommend_Product price-->
+                          ₫{{ recommend_product.price }}
+                      </div>
+                  </div>
+                  <!-- recommend_Product actions-->
+                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                      <div class="text-center"><a style="background-color: #ffc107;" class="btn btn-outline-dark mt-auto" href="{% url 'product' recommend_product.id %}">View Product</a></div>
+                  </div>
+              </div>
+          </div>
+
+          {% endfor %}
+      </div>
+
+  </div>
+  <br/><br/>
+      
+</section>
+</div>
+       	
+
+<br/><br/>
+
+<script>
+// Check if button pressed
+$(document).on('click', '#add-cart', function(e){
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: '{% url 'cart_add' %}',
+        data: {
+    product_id: $('#add-cart').val(),
+    product_qty: $('#qty-cart option:selected').text(),
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+    action: 'post'
+        },
+
+        success: function(json){
+            //console.log(json)
+            document.getElementById("cart_quantity").textContent = json.qty
+            location.reload();
+        },
+
+        error: function(xhr, errmsg, err){
+
+        }
+
+
+    });
+
+
+
+})
+
+
+
+
+</script>
+
+
+{% endblock %}

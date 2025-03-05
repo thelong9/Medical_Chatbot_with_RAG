@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+
+        <!-- Header-->
+        <header class="bg-warning py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div style="color: #0d6efd;" class="text-center">
+                    <h1 class="display-4 fw-bolder">Checkout</h1>
+                    <p class="lead fw-normal mb-0">Review Your Order...</p>
+                </div>
+            </div>
+        </header>
+        <br/>
+        <div class="container">
+            <div class="row">
+                
+                    <div class="col-md-6 offset-md-3">
+          <div class="card">
+          <div class="card-header fw-bolder">
+            Order Summary
+          </div>
+          <div class="card-body">
+            {% for product in cart_products %}
+                <div> 
+                  {{ product.name }}
+                 
+                  <div style="color: #dc3545;">
+                  ₫{{ product.price }}
+                  </div>
+                  <small>Quantity: 
+                    {% for key, value in quantities.items %}
+                        {% if key == product.id|slugify %}
+                            {{ value }}
+                        {% endif %}
+                    {% endfor %}</small>
+                    <br/><br/>
+                </div>
+
+
+                
+                
+
+            {% endfor %}
+            <div align="right">
+              <div class=" fw-bolder">Total:</div>
+              <div style="color: #dc3545;" > ₫{{ totals }}</div>
+            
+              <br/>
+              <a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary bg-warning">Update Items</a>
+            </div>
+          </div>
+        </div>
+<br/><br/>
+<div class="card">
+  <div class="card-header fw-bolder">
+    Shipping Info
+  </div>
+  <div class="card-body">
+    <form method="POST" action="{% url 'billing_info' %}">
+        {% csrf_token %}
+    {{ shipping_form.as_p }}
+
+  </div>
+</div>
+<br/>
+<div align="right">
+  <button type="submit" class="btn btn-outline-dark bg-warning">
+          Continue To Billing
+  </button>
+</div>  
+</form>
+<br/><br/>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+{% endblock %}
